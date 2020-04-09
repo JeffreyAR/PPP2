@@ -5,18 +5,28 @@ Author: Jeffrey Russell
 #include "../std_lib_facilities.h"
 
 int main(){
-  //Accept two doubles from the user. Continue running while the user supplies
+  //Accept a double from the user. Continue running while the user supplies
   //doubles.
-  double d1,d2;
-  while(cin >> d1 >> d2){
+  double d1;
+  double small = 1;
+  double large = 0;
+  while(cin >> d1){
 
-    //Output comparison. Note if the absolute value of the difference if the
-    //doubles is less than 1/100.
-    if(d1 == d2) cout << "The values are equal.\n";
-    else{
-      cout << "The smaller value is " << (d1 < d2 ? d1 : d2)
-           << " and the larger value is " << (d1 > d2 ? d1 : d2) << ".\n";
-      if(d1 - d2 < 1.0/100 && d1 - d2 > -1.0/100) cout << "The numbers are almost equal.\n";
+    //Print out the double input from the user. Update the smallest and largest
+    //values if necessary while notifying the user of this change.
+    cout << d1 << "\n";
+    if(small > large){
+      small = d1;
+      large = d1;
+      cout << "This is the smallest so far.\n" << "This is the largest so far.\n";
+    }
+    else if(d1 < small){
+      small = d1;
+      cout << "This is the smallest so far.\n";
+    }
+    else if(d1 > large){
+      large = d1;
+      cout << "This is the largest so far.\n";
     }
   }
 }
