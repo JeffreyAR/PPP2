@@ -11,7 +11,9 @@ int main(){
   string unit;
   double small = 1;
   double large = 0;
-  const double METERS_TO_CENTIMETERS = 100;
+  double total = 0;
+  int count = 0;
+  const int METERS_TO_CENTIMETERS = 100;
   const double INCHES_TO_CENTIMETERS = 2.54;
   const double FEET_TO_CENTIMETERS = 12 * INCHES_TO_CENTIMETERS;
 
@@ -31,7 +33,12 @@ int main(){
     //Print out the double and unit input from the user. Update the smallest and
     //largest values if necessary while notifying the user of this change.
     //Skips if there was a unit error.
-    if(unit != "error") cout << d1 << " cm" << "\n";
+    if(unit != "error"){
+      d1 /= METERS_TO_CENTIMETERS;
+      cout << d1 << " m" << "\n";
+      total += d1;
+      count++;
+    }
     if(small > large && unit != "error"){
       small = d1;
       large = d1;
@@ -46,4 +53,8 @@ int main(){
       cout << "This is the largest so far.\n";
     }
   }
+  cout << "The smallest value entered is " << small << " m.\n"
+       << "The largest value entered is " << large << " m.\n"
+       << "The number of values entered is " << count << " .\n"
+       << "The sum of the values entered is " << total << " m.\n";
 }
