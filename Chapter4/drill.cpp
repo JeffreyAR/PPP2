@@ -19,24 +19,29 @@ int main(){
   //doubles.
   while(cin >> d1 >> unit){
 
-    //Convert input to centimeters if necessary.
+    //Convert input to centimeters if necessary. Give error if unit is invalid.
     if(unit == "m") d1 *= METERS_TO_CENTIMETERS;
     else if(unit == "in") d1 *= INCHES_TO_CENTIMETERS;
     else if(unit == "ft") d1 *= FEET_TO_CENTIMETERS;
+    else if(unit != "cm"){
+      cout << "Error: Invalid unit. Valid units are cm, m, in, and ft.\n";
+      unit = "error";
+    }
 
     //Print out the double and unit input from the user. Update the smallest and
     //largest values if necessary while notifying the user of this change.
-    cout << d1 << " cm" << "\n";
-    if(small > large){
+    //Skips if there was a unit error.
+    if(unit != "error") cout << d1 << " cm" << "\n";
+    if(small > large && unit != "error"){
       small = d1;
       large = d1;
       cout << "This is the smallest so far.\n" << "This is the largest so far.\n";
     }
-    else if(d1 < small){
+    else if(d1 < small && unit != "error"){
       small = d1;
       cout << "This is the smallest so far.\n";
     }
-    else if(d1 > large){
+    else if(d1 > large && unit != "error"){
       large = d1;
       cout << "This is the largest so far.\n";
     }
