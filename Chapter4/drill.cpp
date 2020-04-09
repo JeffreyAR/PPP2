@@ -7,10 +7,10 @@ Author: Jeffrey Russell
 int main(){
   //Accept two ints from the user. Continue running while the user supplies
   //integers.
-  int i1,i2;
-  while(cin >> i1 >> i2){
-    if(i1 == i2) cout << "The values are equal.\n";
-    else cout << "The smaller value is " << (i1 < i2 ? i1 : i2)
-         << " and the larger value is " << (i1 > i2 ? i1 : i2) << ".\n";
+  double d1,d2;
+  while(cin >> d1 >> d2){
+    if(d1 == d2) cout << "The values are equal.\n";
+    else cout << "The smaller value is " << (d1 < d2 ? d1 : d2)
+         << " and the larger value is " << (d1 > d2 ? d1 : d2) << ".\n";
   }
 }
