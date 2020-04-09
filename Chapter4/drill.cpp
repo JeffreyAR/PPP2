@@ -60,6 +60,7 @@ int main(){
        << "The number of values entered is " << count << " .\n"
        << "The sum of the values entered is " << total << " m.\n"
        << "The values you entered are: \n";
+  sort(valuesEntered);
   for(double x : valuesEntered){
     cout << x << " m\n";
   }
