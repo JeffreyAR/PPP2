@@ -1,9 +1,20 @@
+/*
+Author: Jeffrey Russell
+Purpose: Take as input from the user a spelled out version of a number.
+         Output the numeric version if it is from one to ten, complain
+         otherwise.
+*/
+
 #include "../std_lib_facilities.h"
 
 int main(){
+
+  //Request and store a spelled-out number.
   cout << "Please enter the spelled-out version of a one digit number: ";
   string digit;
   cin >> digit;
+
+  //Output the correct number if it is single digit, complain otherwise.
   if(digit == "zero" || digit == "Zero") cout << 0;
   else if(digit == "one" || digit == "One") cout << 1;
   else if(digit == "two" || digit == "Two") cout << 2;

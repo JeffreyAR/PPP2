@@ -1,15 +1,27 @@
+/*
+Author: Jeffrey Russell
+Purpose: Accepts a currency selected by the user and an amount of said currency
+         from the user. The program converts this to dollars and outputs the
+         result.
+*/
+
 #include "../std_lib_facilities.h"
 
 int main(){
+  //Request and store the currency to convert from the user.
   cout << "Please enter whether you would like to convert "
         << " yen (y), euros (e), pounds (p), yuan (u), or kroner (k) to dollars: ";
   char mode;
   cin >> mode;
 
+  //Request and store the amount to convert from the user.
   cout << "Please enter the amount of currency you are converting: ";
   double amount;
   cin >> amount;
 
+  //Calculate the dollar amount based upon the selected currency. Call the user
+  //silly if they try to convert dollars to dollars. Quit if an unexpected
+  //character is entered.
   double total;
   string currency;
   string plural;
@@ -39,8 +51,10 @@ int main(){
     return 0;
   default:
     cout << "I don't seem to recognize " << mode << ".\n";
-    return 0;
+    return -1;
   }
+
+  //Tell the user how much their currency is worth in dollars.
   plural = (total != 1 ? "dollars" : "dollar");
   cout << amount << " " << currency << " is equal to " << total << " "
         << plural << ".\n";
