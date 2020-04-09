@@ -9,6 +9,7 @@ int main(){
   //integers.
   int i1,i2;
   while(cin >> i1 >> i2){
-    cout << i1 << " " << i2 << "\n";
+    cout << "The smaller value is " << (i1 < i2 ? i1 : i2)
+         << "and the larger value is " << (i1 > i2 ? i1 : i2);
   }
 }
