@@ -13,6 +13,7 @@ int main(){
   double large = 0;
   double total = 0;
   int count = 0;
+  vector<double> valuesEntered;
   const int METERS_TO_CENTIMETERS = 100;
   const double INCHES_TO_CENTIMETERS = 2.54;
   const double FEET_TO_CENTIMETERS = 12 * INCHES_TO_CENTIMETERS;
@@ -38,6 +39,7 @@ int main(){
       cout << d1 << " m" << "\n";
       total += d1;
       count++;
+      valuesEntered.push_back(d1);
     }
     if(small > large && unit != "error"){
       small = d1;
@@ -56,5 +58,9 @@ int main(){
   cout << "The smallest value entered is " << small << " m.\n"
        << "The largest value entered is " << large << " m.\n"
        << "The number of values entered is " << count << " .\n"
-       << "The sum of the values entered is " << total << " m.\n";
+       << "The sum of the values entered is " << total << " m.\n"
+       << "The values you entered are: \n";
+  for(double x : valuesEntered){
+    cout << x << " m\n";
+  }
 }
