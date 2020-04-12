@@ -1,15 +1,19 @@
 /*
 Author: Jeffrey Russell
-Purpose: This program finds all prime numbers from 1 to 100. The method used is
-         to keep a vector of all previous primes found and check divisibility.
+Purpose: This program finds all prime numbers from 1 to max, where max is
+         provided by the user. The algorithm used is the Sieve of Eratosthenes.
 */
 
 #include "../std_lib_facilities.h"
 
 int main(){
 
+  //Ask the user to input max.
+  cout << "Please enter the max value you wish to search through.";
+  int max;
+  cin >> max;
+
   //Initialize prime vector and other variables.
-  int max = 101;
   int cur = 1;
   bool primes[max] = {0};
 
