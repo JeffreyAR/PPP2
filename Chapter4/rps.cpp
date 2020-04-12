@@ -65,7 +65,7 @@ int main(){
       else if(move[i] == "scissors") cout << "It's a tie.\n";
       else if(move[i] == "paper") cout << "You win!\n";
     }
-    else if(userMove == "|") cout << "Okay, thanks for playing!";
+    else if(userMove == "|") cout << "Okay, thanks for playing!\n";
     else cout << "Sorry, I don't recognize that move.\n";
 
     //Increment i for the next choice, if i is out of the vector's index,
