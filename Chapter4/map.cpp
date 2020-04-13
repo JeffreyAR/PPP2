@@ -1,7 +1,9 @@
 /*
 Author: Jeffrey Russell
 Purpose: This program implements a map using two vectors. After initialization,
-         requests names from the user to print the corresponding score.
+         requests names from the user to print the corresponding score. Following
+         this, the user may search for scores as well. Names with said score
+         will be printed.
 */
 
 #include "../std_lib_facilities.h"
@@ -58,4 +60,20 @@ int main(){
     found = false;
     cin >> request;
   }
+
+  //Now allow the user to search for scores and print all corresponding names.
+  cout << "Now you may enter scores to search for names which match that score."
+       << " Enter '|' when finished.\n";
+
+  while(cin >> score){
+    for(int i = 0; i < scores.size(); i++){
+      if(scores[i] == score){
+        cout << names[i] << "\n";
+        found = true;
+      }
+    }
+    if(found == false) cout << "Error: score not found\n";
+    found = false;
+  }
+
 }
