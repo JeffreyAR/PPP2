@@ -1,7 +1,7 @@
 /*
 Author: Jeffrey Russell
-Purpose: This program implements a map using two vectors. Prints contents of
-         map upon termination.
+Purpose: This program implements a map using two vectors. After initialization,
+         requests names from the user to print the corresponding score.
 */
 
 #include "../std_lib_facilities.h"
@@ -36,7 +36,26 @@ int main(){
     repeat = false;
   }
 
-  for(int i = 0; i < names.size(); i++){
-    cout << names[i] << ": " << scores[i] << "\n";
+  //Inform the user that they can retrieve any scores they like by inputting
+  //the name of the person corresponding to the score they wish to retrieve.
+  //Initialize variables for user input and error handling.
+  cout << "Now, if you'd like to retrieve any scores, please enter the "
+       << "corresponding name. Enter NoName to terminate.\n";
+  string request;
+  bool found = false;
+  cin >> request;
+
+  //While the user wants to search, try to match the entered name. If found,
+  //return the corresponding score. Otherwise, return an error.
+  while(request != "NoName"){
+    for(int i = 0; i < names.size(); i++){
+      if(names[i] == request){
+        cout << scores[i] << "\n";
+        found = true;
+      }
+    }
+    if(!found) cout << "Error: name not found.\n";
+    found = false;
+    cin >> request;
   }
 }
