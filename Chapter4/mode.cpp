@@ -28,8 +28,7 @@ int main(){
     //If either we are on a new integer or are at the end of the list,
     //see if the current integer is a mode. If so, replace the old vector if
     //this is a new max. Otherwise, push onto the mode vector.
-    if(userInput[i] != current || i == userInput.size() - 1){
-      if(i == userInput.size() - 1) repeated++;
+    if(userInput[i] != current){
       if(repeated > most){
         mode.clear();
         mode.push_back(current);
@@ -42,6 +41,17 @@ int main(){
       repeated = 0;
     }
     repeated++;
+  }
+
+  //We don't check if the last element of the vector is a mode in the loop, so
+  //do it now.
+  if(repeated > most){
+    mode.clear();
+    mode.push_back(current);
+    most = repeated;
+  }
+  else if(repeated == most){
+    mode.push_back(current);
   }
 
   //Output either an error if no data was input, the unique mode if only one mode
