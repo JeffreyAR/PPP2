@@ -1,6 +1,7 @@
 /*
 Author: Jeffrey Russell
-Purpose: This program implements a map using two vectors.
+Purpose: This program implements a map using two vectors. Prints contents of
+         map upon termination.
 */
 
 #include "../std_lib_facilities.h"
