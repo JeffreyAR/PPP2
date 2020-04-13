@@ -1,5 +1,11 @@
 /*
 Author: Jeffrey Russell
+Purpose: The program accepts as input any number of doubles with units from the
+         user. Accepted units are cm, m, in, and ft. The smallest value,
+         largest value, total, and number of values are stored. Each value is
+         also stored in a vector. Upon termination of the input loop, the
+         noteable values are printed, the vector is sorted, and its contents
+         are printed.
 */
 
 #include "../std_lib_facilities.h"
