@@ -10,8 +10,9 @@ Purpose: This drill gives multiple ways of printing out "success" which will
 int main()
 try {
   vector<char> v(5);
-  for(int i = 0; 0 < v.size(); ++i);
+  for(int i = 0; i < v.size(); ++i);
   cout << "Success!\n";
+  keep_window_open();
   return 0;
 }
 catch (exception& e) {
