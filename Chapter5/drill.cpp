@@ -10,8 +10,8 @@ Purpose: This drill gives multiple ways of printing out "success" which will
 int main()
 try {
   vector<int> v(10);
-  v(5) = 7;
-  if(v(5) != 7) cout << "Success!\n";
+  v[5] = 8;
+  if(v[5] != 7) cout << "Success!\n";
   keep_window_open();
   return 0;
 }
