@@ -10,7 +10,7 @@ Purpose: This drill gives multiple ways of printing out "success" which will
 int main()
 try {
   vector<char> v(5);
-  for(int i = 0; = < v.size(); ++i);
+  for(int i = 0; 0 < v.size(); ++i);
   cout << "Success!\n";
   return 0;
 }
