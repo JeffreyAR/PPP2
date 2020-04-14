@@ -9,7 +9,7 @@ Purpose: This drill gives multiple ways of printing out "success" which will
 
 int main()
 try {
-  if(true) then cout << "Success!\n";
+  if(true) cout << "Success!\n";
   else cout << "Fail!\n";
   keep_window_open();
   return 0;
