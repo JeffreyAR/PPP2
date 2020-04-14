@@ -11,7 +11,7 @@ int main()
 try {
   int i = 0;
   int j = 9;
-  while(i < 10) ++j;
+  while(i < 20) ++i;
   if(j < i) cout << "Success!\n";
   keep_window_open();
   return 0;
