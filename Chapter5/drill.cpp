@@ -10,7 +10,7 @@ Purpose: This drill gives multiple ways of printing out "success" which will
 int main()
 try {
   string s = "Success!\n";
-  for(int i = 0; i < 6; ++i) cout << s[i];
+  for(int i = 0; i < 9; ++i) cout << s[i];
   keep_window_open();
   return 0;
 }
