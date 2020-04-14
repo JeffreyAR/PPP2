@@ -10,7 +10,8 @@ Purpose: This drill gives multiple ways of printing out "success" which will
 int main()
 try {
   int i = 0;
-  while(i < 10) ++j;
+  int j = 0;
+  while(i < 10) ++i;
   if(j < i) cout << "Success!\n";
   keep_window_open();
   return 0;
