@@ -9,8 +9,8 @@ Purpose: This drill gives multiple ways of printing out "success" which will
 
 int main()
 try {
-  string<char> s = "Success!\n";
-  for(int i = 0; i <= 10; ++i) cout << s[i];
+  string s = "Success!\n";
+  for(int i = 0; i < 10; ++i) cout << s[i];
   keep_window_open();
   return 0;
 }
