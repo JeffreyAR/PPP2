@@ -10,7 +10,7 @@ Purpose: This drill gives multiple ways of printing out "success" which will
 int main()
 try {
   string s = "ape";
-  boo c = "fool" < s;
+  bool c = "fool" > s;
   if(c) cout << "Success!\n";
   keep_window_open();
   return 0;
