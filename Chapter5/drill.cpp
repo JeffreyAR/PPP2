@@ -9,9 +9,8 @@ Purpose: This drill gives multiple ways of printing out "success" which will
 
 int main()
 try {
-  int x = 2000;
-  char c = x;
-  if(c != 2000) cout << "Success!\n";
+  string s = "Success!\n";
+  for(int i = 0; i <= 10; ++i) cout << s[i];
   keep_window_open();
   return 0;
 }
