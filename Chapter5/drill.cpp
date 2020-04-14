@@ -9,9 +9,9 @@ Purpose: This drill gives multiple ways of printing out "success" which will
 
 int main()
 try {
-  string s = "ape";
-  if (s != "fool") cout << "Success!\n";
-  keep_window_open();
+  vector<char> v(5);
+  for(int i = 0; = < v.size(); ++i);
+  cout << "Success!\n";
   return 0;
 }
 catch (exception& e) {
