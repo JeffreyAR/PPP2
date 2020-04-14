@@ -9,8 +9,10 @@ Purpose: This drill gives multiple ways of printing out "success" which will
 
 int main()
 try {
-  vector<int> v(5);
-  for(int i = 0; i <= v.size(); ++i); cout << "Success!\n";
+  int i = 0;
+  int j = 9;
+  while(i < 10) ++j;
+  if(j < i) cout << "Success!\n";
   keep_window_open();
   return 0;
 }
