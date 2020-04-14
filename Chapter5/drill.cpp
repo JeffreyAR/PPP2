@@ -10,7 +10,7 @@ Purpose: This drill gives multiple ways of printing out "success" which will
 int main()
 try {
   int x = 2;
-  double d = 5/(x - 2);
+  double d = 4.5;
   if(d == 2*x + 0.5) cout << "Success!\n";
   keep_window_open();
   return 0;
