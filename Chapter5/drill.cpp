@@ -9,7 +9,7 @@ Purpose: This drill gives multiple ways of printing out "success" which will
 
 int main()
 try {
-  string res = 7;
+  int res = 7;
   vector <int> v(10);
   v[5] = res;
   cout << "Success!\n";
