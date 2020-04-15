@@ -9,7 +9,7 @@ Purpose: This drill gives multiple ways of printing out "success" which will
 
 int main()
 try {
-  cin << "Success!\n";
+  cout << "Success!\n";
   keep_window_open();
   return 0;
 }
