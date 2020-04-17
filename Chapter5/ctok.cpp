@@ -15,8 +15,16 @@ Corrected errors:
 
 #include "../std_lib_facilities.h"
 
+class Bad_celsius{};
+
 double ctok(double c)
 {
+  //Check that function input is valid.
+  if(c < -273.15){
+    throw Bad_celsius{};
+  }
+
+  //Calculate and return temperature in Kelvin.
   double k = c + 273.15;
   return k;
 }
@@ -27,13 +35,16 @@ int main()
   double c = 0;
   cin >> c;
 
-  //Check that user input is valid.
-  if(c < -273.15){
-    cerr << "Error: provided temperature less than absolute 0.\n";
+
+  //Calculate temperature in Kelvin. Catch exceptions given by bad input to
+  //ctok.
+  try{
+    double k = ctok(c);
+    cout << k << "\n";
+  }
+  catch(Bad_celsius){
+    cerr << "Error: Celsius temperature provided to conversion function is less"
+         << " than absolute zero.\n";
     return 1;
   }
-
-  //Calculate temperature in Kelvin.
-  double k = ctok(c);
-  cout << k << "\n";
 }
