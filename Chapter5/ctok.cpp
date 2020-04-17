@@ -23,8 +23,17 @@ double ctok(double c)
 
 int main()
 {
+  //Request temperature in Celsius from user.
   double c = 0;
   cin >> c;
+
+  //Check that user input is valid.
+  if(c < -273.15){
+    cerr << "Error: provided temperature less than absolute 0.\n";
+    return 1;
+  }
+
+  //Calculate temperature in Kelvin.
   double k = ctok(c);
   cout << k << "\n";
 }
