@@ -1,7 +1,8 @@
 /*
-As this code was largely provided by the text, I do not claim to be the author.
-Purpose: This program originally had multiple errors, but attempts to convert
-         temperatures from Celsius to Kelvin.
+Author: Jeffrey Russell
+Purpose: This program originally had multiple errors. It now can convert from
+         Celsius to Kelvin or vice versa. Errors are thrown for temperatures
+         below absolute zero.
 Corrected errors:
          -k in ctok changed from int to double to prevent loss of information
          -return int corrected to return k in ctok
@@ -16,35 +17,63 @@ Corrected errors:
 #include "../std_lib_facilities.h"
 
 class Bad_celsius{};
+class Bad_kelvin{};
 
 double ctok(double c)
 {
-  //Check that function input is valid.
-  if(c < -273.15){
-    throw Bad_celsius{};
-  }
+  //Check that the temperature is above absolute zero.
+  if(c < -273.15) throw Bad_celsius{};
 
   //Calculate and return temperature in Kelvin.
   double k = c + 273.15;
   return k;
 }
 
+double ktoc(double k){
+  //Check that the temperature is above absolute zero.
+  if(k < 0) throw Bad_kelvin{};
+
+  //Calculate and return temperature in Celsius.
+  double c = k - 273.15;
+  return c;
+}
+
 int main()
 {
-  //Request temperature in Celsius from user.
-  double c = 0;
-  cin >> c;
-
-
-  //Calculate temperature in Kelvin. Catch exceptions given by bad input to
-  //ctok.
-  try{
-    double k = ctok(c);
-    cout << k << "\n";
-  }
-  catch(Bad_celsius){
-    cerr << "Error: Celsius temperature provided to conversion function is less"
-         << " than absolute zero.\n";
+  //Request mode from user followed by appropriate temperature to convert.
+  int mode;
+  cout << "Please enter one for celsius to kelvin or two for kelvin to celsius.\n";
+  cin >> mode;
+  if(mode != 1 && mode != 2){
+    cerr << "Error: Invalid mode.\n";
     return 1;
   }
+  cout << "Please enter the temperature you wish to convert.";
+  double convert = 0;
+  cin >> convert;
+
+
+  //Calculate temperature according to the mode input previously.
+  double finalTemp;
+  if(mode == 1){
+    try{
+      finalTemp = ctok(convert);
+    }
+    catch(Bad_celsius){
+      cerr << "Error: Celsius temperature provided to conversion function is less"
+           << " than absolute zero.\n";
+      return 1;
+    }
+  }
+  else{
+    try{
+      finalTemp = ktoc(convert);
+    }
+    catch(Bad_kelvin){
+      cerr << "Error: Celsius temperature provided to conversion function is less"
+           << " than absolute zero.\n";
+      return 1;
+    }
+  }
+  cout << finalTemp << "\n";
 }
