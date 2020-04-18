@@ -30,7 +30,12 @@ int main(){
   }
 
   //Sum the first N integers in the sequence and print it.
-  int sum = 0;
+  double sum = 0;
   for(int i = 0; i < N; i++) sum += sequence[i];
+  int testSum = sum;
+  if(sum != testSum){
+    cerr << "Error: sum is not an integer.\n";
+    return 1;
+  }
   cout << "The sum of the first " << N << " integers is " << sum << ".\n";
 }
