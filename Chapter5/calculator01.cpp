@@ -183,6 +183,8 @@ double expression()
 //------------------------------------------------------------------------------
 
 int main()
+cout << "Welcome to our simple calculator.\n"
+     << "Please enter expressions using floating-point numbers.\n";
 try
 {
     double val = 0;
