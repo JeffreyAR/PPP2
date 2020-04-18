@@ -182,7 +182,7 @@ double expression()
 
 //------------------------------------------------------------------------------
 
-int main()
+int main(){
 cout << "Welcome to our simple calculator.\n"
      << "Please enter expressions using floating-point numbers.\n"
      << "The operators available are +, -, *, /, and ().\n"
@@ -211,6 +211,7 @@ catch (...) {
     cerr << "Oops: unknown exception!\n";
 	keep_window_open();
     return 2;
+}
 }
 
 //------------------------------------------------------------------------------
