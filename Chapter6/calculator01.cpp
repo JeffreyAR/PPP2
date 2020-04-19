@@ -63,6 +63,17 @@ void Token_stream::putback(Token t)
 
 //------------------------------------------------------------------------------
 
+// Factorial function implementation.
+double factorial(double x){
+  double result = 1;
+  for(int i = 1; i <= x; i++){
+    result *= i;
+  }
+  return result;
+}
+
+//------------------------------------------------------------------------------
+
 Token Token_stream::get()
 {
     if (full) {       // do we already have a Token ready?
@@ -77,7 +88,7 @@ Token Token_stream::get()
     switch (ch) {
     case '=':    // for "print"
     case 'x':    // for "quit"
-    case '(': case ')': case '{': case '}': case '+': case '-': case '*': case '/':
+    case '(': case ')': case '{': case '}': case '+': case '-': case '*': case '/': case '!':
         return Token(ch);        // let each character represent itself
     case '.':
     case '0': case '1': case '2': case '3': case '4':
@@ -135,21 +146,42 @@ double primary()
 
 //------------------------------------------------------------------------------
 
+// deal with !
+double fact()
+{
+  double left = primary();
+  Token t = ts.get();
+
+  while(true){
+    switch(t.kind){
+      case '!':
+        left = factorial(left);
+        t = ts.get();
+        break;
+      default:
+        ts.putback(t);
+        return left;
+    }
+  }
+}
+
+//------------------------------------------------------------------------------
+
 // deal with *, /, and %
 double term()
 {
-    double left = primary();
+    double left = fact();
     Token t = ts.get();        // get the next token from token stream
 
     while(true) {
         switch (t.kind) {
         case '*':
-            left *= primary();
+            left *= fact();
             t = ts.get();
             break;
         case '/':
             {
-                double d = primary();
+                double d = fact();
                 if (d == 0) error("divide by zero");
                 left /= d;
                 t = ts.get();
@@ -192,7 +224,7 @@ double expression()
 int main(){
 cout << "Welcome to our simple calculator.\n"
      << "Please enter expressions using floating-point numbers.\n"
-     << "The operators available are +, -, *, /, {}, and ().\n"
+     << "The operators available are +, -, *, /, !, {}, and ().\n"
      << "Print the result using '=' and exit using 'x'.\n";
 try
 {
