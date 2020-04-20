@@ -1,0 +1,18 @@
+Number:
+  floating-point-literal
+Primary:
+  Number
+  '(' Expression ')'
+Initial:
+  Primary
+  '!' Primary
+  '~' Primary
+Term:
+  Initial
+  Term '&' Initial
+Compound:
+  Term
+  Compound '^' Term
+Expression:
+  Compound
+  Expression '|' Compound
