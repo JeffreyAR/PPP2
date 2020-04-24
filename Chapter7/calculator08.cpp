@@ -11,6 +11,8 @@
 
 #include "../std_lib_facilities.h"
 
+//Create Token type. Initializer for just a kind, a kind with a value, and a
+//kind with a name.
 struct Token {
 	char kind;
 	double value;
@@ -20,24 +22,28 @@ struct Token {
   Token(char ch, string s) :kind(ch), name(s) { }
 };
 
+//Create Token stream.
 class Token_stream {
 	bool full;
 	Token buffer;
 public:
-	Token_stream() :full(0), buffer(0) { }
+	Token_stream() :full(0), buffer(0) { } //Initalize empty stream
 
-	Token get();
-	void unget(Token t) { buffer=t; full=true; }
+	Token get(); //Get next token
+	void unget(Token t) { buffer=t; full=true; } //Store token t
 
-	void ignore(char);
+	void ignore(char); //Skip to the next statement
 };
 
+//Declare constants
 const char let = 'L';
 const char quit = 'Q';
 const char print = ';';
 const char number = '8';
 const char name = 'a';
 
+//Get the next token from cin, categorize it, and create the appropriate Token.
+//Return said token.
 Token Token_stream::get()
 {
 	if (full) { full=false; return buffer; }
@@ -53,7 +59,7 @@ Token Token_stream::get()
 	case '%':
 	case ';':
 	case '=':
-		return Token(ch);
+		return Token(ch); //Operator
 	case '.':
 	case '0':
 	case '1':
@@ -65,13 +71,13 @@ Token Token_stream::get()
 	case '7':
 	case '8':
 	case '9':
-	{	cin.unget();
+	{	cin.unget(); //Number
 		double val;
 		cin >> val;
 		return Token(number,val);
 	}
 	default:
-		if (isalpha(ch)) {
+		if (isalpha(ch)) { //Declaration, quit, or name
 			string s;
 			s += ch;
 			while(cin.get(ch) && (isalpha(ch) || isdigit(ch))) s+=ch;
@@ -84,9 +90,10 @@ Token Token_stream::get()
 	}
 }
 
+//Skip until the next occurence of c, empty buffer if full.
 void Token_stream::ignore(char c)
 {
-	if (full && c==buffer.kind) {
+	if (full && c==buffer.kind) { //c was just read, so empty buffer and return
 		full = false;
 		return;
 	}
@@ -97,6 +104,7 @@ void Token_stream::ignore(char c)
 		if (ch==c) return;
 }
 
+//Create variable type with basic constructor.
 struct Variable {
 	string name;
 	double value;
@@ -105,6 +113,7 @@ struct Variable {
 
 vector<Variable> names;
 
+//Find the value for a variable if it exists in names, otherwise return an error.
 double get_value(string s)
 {
 	for (int i = 0; i<names.size(); ++i)
@@ -112,6 +121,7 @@ double get_value(string s)
 	error("get: undefined name ",s);
 }
 
+//Set the value for a variable if it exists in names, otherwise return an error.
 void set_value(string s, double d)
 {
 	for (int i = 0; i<=names.size(); ++i)
@@ -122,6 +132,7 @@ void set_value(string s, double d)
 	error("set: undefined name ",s);
 }
 
+//Check to see if a variable has been declared.
 bool is_declared(string s)
 {
 	for (int i = 0; i<names.size(); ++i)
@@ -131,28 +142,32 @@ bool is_declared(string s)
 
 Token_stream ts;
 
+//Forward declare expression to be used in primary.
 double expression();
 
+//Obtain and return a primary. Deals with subexpressions, numbers, negative
+//numbers, and variable substitution.
 double primary()
 {
 	Token t = ts.get();
 	switch (t.kind) {
-	case '(':
+	case '(': //Evaluate subexpression
 	{	double d = expression();
 		t = ts.get();
 		if (t.kind != ')') error("'(' expected");
 	}
-	case '-':
+	case '-': //Unary -, negates the next primary
 		return - primary();
-	case number:
+	case number: //Number
 		return t.value;
-	case name:
+	case name: //Variable
 		return get_value(t.name);
 	default:
 		error("primary expected");
 	}
 }
 
+//Obtain and return a term. Deals with * and / of primaries.
 double term()
 {
 	double left = primary();
@@ -175,6 +190,7 @@ double term()
 	}
 }
 
+//Gets and returns an evaluated expression. Deals with + and - of terms.
 double expression()
 {
 	double left = term();
@@ -188,12 +204,14 @@ double expression()
 			left -= term();
 			break;
 		default:
-			ts.unget(t);
+			ts.unget(t); //No more addition or multiplication of terms - return.
 			return left;
 		}
 	}
 }
 
+//Declare a variable. Expects an undeclared name followed by '=' followed by some
+//expression. Returns final value of variable.
 double declaration()
 {
 	Token t = ts.get();
@@ -207,11 +225,12 @@ double declaration()
 	return d;
 }
 
+//Evaluate a statement - either an expresion or a declaration.
 double statement()
 {
 	Token t = ts.get();
 	switch(t.kind) {
-	case let:
+	case let: //If t is let, a declaration follows. Otherwise, expression.
 		return declaration();
 	default:
 		ts.unget(t);
@@ -219,6 +238,7 @@ double statement()
 	}
 }
 
+//Reset the token stream after an error so we can continue.
 void clean_up_mess()
 {
 	ts.ignore(print);
@@ -227,22 +247,24 @@ void clean_up_mess()
 const string prompt = "> ";
 const string result = "= ";
 
+//Accept statements from the user until they type "quit".
 void calculate()
 {
 	while(true) try {
 		cout << prompt;
 		Token t = ts.get();
-		while (t.kind == print) t=ts.get();
+		while (t.kind == print) t=ts.get(); //Deal with multiple prints
 		if (t.kind == quit) return;
 		ts.unget(t);
 		cout << result << statement() << endl;
 	}
-	catch(runtime_error& e) {
+	catch(runtime_error& e) { //Handle any errors that are thrown in calculation
 		cerr << e.what() << endl;
 		clean_up_mess();
 	}
 }
 
+//Begin the program, handle fatal exceptions.
 int main()
 
 	try {
