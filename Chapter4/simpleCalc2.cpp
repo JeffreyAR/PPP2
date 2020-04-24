@@ -54,12 +54,18 @@ int main(){
   cout << "Thank you for using simpleCalc!\n";
 }
 
+//Convert a given string into a single digit integer. We assume that either x is
+//a spelled out single digit number or simply a single digit number.
 double convert(string x){
+
+  //If x has length one, it is a number. Find which it is and return it.
   if(x.length() == 1){
     for(int i = 0; i < 10; i++){
       if(to_string(i) == x) return i;
     }
   }
+  //Otherwise, create a vector which at index i holds the spelled version of i.
+  //Find the string x is equal to and return the index.
   else{
     vector<string> dict = {"zero", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine"};
     double answer = -1;
