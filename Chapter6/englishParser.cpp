@@ -1,6 +1,11 @@
 /*
 Author: Jeffrey Russell
 Purpose: This program parses a very small subset of the English language.
+
+It occurs to me only after writing and testing the program that the question
+did not ask for the English grammar including the article from the previous
+exercise. However, it seems silly to remove functionality, so I'm going to leave
+it as is since it correctly handles anything without articles anyway.
 */
 
 #include "../std_lib_facilities.h"
