@@ -45,6 +45,7 @@ const char root = 'r';
 const char power = 'p';
 const string squareRoot = "sqrt";
 const string intPower = "pow";
+const string quitString = "exit";
 
 //Get the next token from cin, categorize it, and create the appropriate Token.
 //Return said token.
@@ -89,7 +90,7 @@ Token Token_stream::get()
 			s += ch;
 			while(cin.get(ch) && (isalpha(ch) || isdigit(ch))) s+=ch;
 			cin.unget();
-			if (s == "quit") return Token(quit);
+			if (s == quitString) return Token(quit);
       if (s == squareRoot) return Token(root);
       if (s == intPower) return Token(power);
 			return Token(name,s);
