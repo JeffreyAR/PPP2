@@ -88,7 +88,7 @@ Token Token_stream::get()
 		if (isalpha(ch)) { //Declaration, quit, square root, or name
 			string s;
 			s += ch;
-			while(cin.get(ch) && (isalpha(ch) || isdigit(ch))) s+=ch;
+			while(cin.get(ch) && (isalpha(ch) || isdigit(ch) || ch == '_')) s+=ch;
 			cin.unget();
 			if (s == quitString) return Token(quit);
       if (s == squareRoot) return Token(root);
