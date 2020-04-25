@@ -157,7 +157,10 @@ double primary()
 	case '(': //Evaluate subexpression
 	{	double d = expression();
 		t = ts.get();
-		if (t.kind != ')') error("')' expected");
+		if (t.kind != ')'){
+      ts.unget(t);
+      error("')' expected");
+    }
     return d;
 	}
 	case '-': //Unary -, negates the next primary
@@ -168,13 +171,21 @@ double primary()
 		return get_value(t.name);
   case root: //Square root function
     { t = ts.get();
-      if(t.kind != '(') error("'(' expected after ", squareRoot);
+      if(t.kind != '('){
+        ts.unget(t);
+        error("'(' expected after ", squareRoot);
+      }
       double d = expression();
+      if(d < 0) error("expression inside sqrt is negative");
       t = ts.get();
-      if (t.kind != ')') error("')' expected");
+      if (t.kind != ')'){
+        ts.unget(t);
+        error("')' expected");
+      }
       return sqrt(d);
     }
 	default:
+    ts.unget(t);
 		error("primary expected");
 	}
 }
@@ -249,7 +260,10 @@ double statement()
 		return declaration();
 	default:
 		ts.unget(t);
-		return expression();
+    double d = expression();
+    Token t = ts.get();
+    if(t.kind == ')') error("extra ending parenthesis");
+		return d;
 	}
 }
 
