@@ -42,7 +42,9 @@ const char print = ';';
 const char number = '8';
 const char name = 'a';
 const char root = 'r';
+const char power = 'p';
 const string squareRoot = "sqrt";
+const string intPower = "pow";
 
 //Get the next token from cin, categorize it, and create the appropriate Token.
 //Return said token.
@@ -61,6 +63,7 @@ Token Token_stream::get()
 	case '%':
 	case ';':
 	case '=':
+  case ',':
 		return Token(ch); //Operator
 	case '.':
 	case '0':
@@ -87,6 +90,7 @@ Token Token_stream::get()
 			if (s == "let") return Token(let);
 			if (s == "quit") return Token(quit);
       if (s == squareRoot) return Token(root);
+      if (s == intPower) return Token(power);
 			return Token(name,s);
 		}
 		error("Bad token");
@@ -143,6 +147,14 @@ bool is_declared(string s)
 	return false;
 }
 
+double raisePower(double d, int i){
+  double result = 1;
+  for(int j = 1; j <= i; j++){
+    result *= d;
+  }
+  return result;
+}
+
 Token_stream ts;
 
 //Forward declare expression to be used in primary.
@@ -183,6 +195,26 @@ double primary()
         error("')' expected");
       }
       return sqrt(d);
+    }
+  case power: //Power function
+    { t = ts.get();
+      if(t.kind != '('){
+        ts.unget(t);
+        error("'(' expected after ", intPower);
+      }
+      double d = expression();
+      t = ts.get();
+      if(t.kind != ','){
+        ts.unget(t);
+        error("',' missing in ", intPower);
+      }
+      int i = narrow_cast<int>(expression());
+      t = ts.get();
+      if (t.kind != ')'){
+        ts.unget(t);
+        error("')' expected");
+      }
+    return raisePower(d,i);
     }
 	default:
     ts.unget(t);
