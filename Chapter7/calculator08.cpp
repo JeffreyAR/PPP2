@@ -81,13 +81,14 @@ Token Token_stream::get()
 		cin >> val;
 		return Token(number,val);
 	}
+  case '#':
+    return Token(let);
 	default:
 		if (isalpha(ch)) { //Declaration, quit, square root, or name
 			string s;
 			s += ch;
 			while(cin.get(ch) && (isalpha(ch) || isdigit(ch))) s+=ch;
 			cin.unget();
-			if (s == "let") return Token(let);
 			if (s == "quit") return Token(quit);
       if (s == squareRoot) return Token(root);
       if (s == intPower) return Token(power);
