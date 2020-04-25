@@ -41,6 +41,8 @@ const char quit = 'Q';
 const char print = ';';
 const char number = '8';
 const char name = 'a';
+const char root = 'r';
+const string squareRoot = "sqrt";
 
 //Get the next token from cin, categorize it, and create the appropriate Token.
 //Return said token.
@@ -77,13 +79,14 @@ Token Token_stream::get()
 		return Token(number,val);
 	}
 	default:
-		if (isalpha(ch)) { //Declaration, quit, or name
+		if (isalpha(ch)) { //Declaration, quit, square root, or name
 			string s;
 			s += ch;
 			while(cin.get(ch) && (isalpha(ch) || isdigit(ch))) s+=ch;
 			cin.unget();
 			if (s == "let") return Token(let);
 			if (s == "quit") return Token(quit);
+      if (s == squareRoot) return Token(root);
 			return Token(name,s);
 		}
 		error("Bad token");
@@ -163,6 +166,14 @@ double primary()
 		return t.value;
 	case name: //Variable
 		return get_value(t.name);
+  case root: //Square root function
+    { t = ts.get();
+      if(t.kind != '(') error("'(' expected after ", squareRoot);
+      double d = expression();
+      t = ts.get();
+      if (t.kind != ')') error("')' expected");
+      return sqrt(d);
+    }
 	default:
 		error("primary expected");
 	}
