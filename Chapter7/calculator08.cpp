@@ -154,7 +154,8 @@ double primary()
 	case '(': //Evaluate subexpression
 	{	double d = expression();
 		t = ts.get();
-		if (t.kind != ')') error("'(' expected");
+		if (t.kind != ')') error("')' expected");
+    return d;
 	}
 	case '-': //Unary -, negates the next primary
 		return - primary();
@@ -203,6 +204,9 @@ double expression()
 		case '-':
 			left -= term();
 			break;
+    case name:
+      error("name adjacent to double");
+      break;
 		default:
 			ts.unget(t); //No more addition or multiplication of terms - return.
 			return left;
@@ -250,6 +254,7 @@ const string result = "= ";
 //Accept statements from the user until they type "quit".
 void calculate()
 {
+  names.push_back(Variable("k",1000));
 	while(true) try {
 		cout << prompt;
 		Token t = ts.get();
@@ -266,7 +271,6 @@ void calculate()
 
 //Begin the program, handle fatal exceptions.
 int main()
-
 	try {
 		calculate();
 		return 0;
