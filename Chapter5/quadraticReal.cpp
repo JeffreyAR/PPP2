@@ -13,6 +13,12 @@ int main(){
   int a,b,c;
   cin >> a >> b >> c;
 
+  //Check that a is nonzero.
+  if(a == 0){
+    cerr << "Error: a is zero.\n";
+    return 1;
+  }
+
   //Calculate the determinant to see if the solutions are real. If so,
   //calculate them. Otherwise, give an error.
   double det = b*b - 4*a*c;

@@ -13,6 +13,8 @@ int main(){
   cin >> i;
 
   //Output whether the integer is even or odd.
-  if(i % 2 == 0) cout << "even\n";
-  else cout << "odd\n";
+  cout << i << " is an ";
+  if(i % 2 == 0) cout << "even";
+  else cout << "odd";
+  cout << " number.\n";
 }
