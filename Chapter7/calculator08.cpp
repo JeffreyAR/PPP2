@@ -125,10 +125,19 @@ struct Variable {
 	Variable(string n, double v, bool b) :name(n), value(v), constant(b) { }
 };
 
-vector<Variable> names;
+//Create Symbol table class.
+class Symbol_table {
+public:
+	double get(string s);
+	void set(string s, double d);
+	bool is_declared(string s);
+	void declare(string s, double d, bool isConstant);
+private:
+	vector<Variable> names;
+};
 
 //Find the value for a variable if it exists in names, otherwise return an error.
-double get_value(string s)
+double Symbol_table::get(string s)
 {
 	for (int i = 0; i<names.size(); ++i)
 		if (names[i].name == s) return names[i].value;
@@ -136,7 +145,7 @@ double get_value(string s)
 }
 
 //Set the value for a variable if it exists in names, otherwise return an error.
-void set_value(string s, double d)
+void Symbol_table::set(string s, double d)
 {
 	for (int i = 0; i<=names.size(); ++i)
 		if (names[i].name == s) {
@@ -148,11 +157,15 @@ void set_value(string s, double d)
 }
 
 //Check to see if a variable has been declared.
-bool is_declared(string s)
+bool Symbol_table::is_declared(string s)
 {
 	for (int i = 0; i<names.size(); ++i)
 		if (names[i].name == s) return true;
 	return false;
+}
+
+void Symbol_table::declare(string s, double d, bool isConstant){
+	names.push_back(Variable(s, d, isConstant));
 }
 
 double raisePower(double d, int i){
@@ -164,6 +177,8 @@ double raisePower(double d, int i){
 }
 
 Token_stream ts;
+
+Symbol_table st;
 
 //Forward declare expression to be used in primary.
 double expression();
@@ -191,11 +206,11 @@ double primary()
 		{ Token s = ts.get();
 			if(s.kind == '='){
 				double u = primary();
-				set_value(t.name, u);
+				st.set(t.name, u);
 				return u;
 			}
 			ts.unget(s);
-			return get_value(t.name);
+			return st.get(t.name);
 		}
   case root: //Square root function
     { t = ts.get();
@@ -291,12 +306,11 @@ double declaration(bool makeConst)
 	Token t = ts.get();
 	if (t.kind != 'a') error ("name expected in declaration");
 	string name = t.name;
-	if (is_declared(name)) error(name, " declared twice");
+	if (st.is_declared(name)) error(name, " declared twice");
 	Token t2 = ts.get();
 	if (t2.kind != '=') error("= missing in declaration of " ,name);
 	double d = expression();
-	if(makeConst) names.push_back(Variable(name,d,true));
-	else names.push_back(Variable(name,d));
+	st.declare(name, d, makeConst);
 	return d;
 }
 
@@ -330,7 +344,7 @@ const string result = "= ";
 //Accept statements from the user until they type "quit".
 void calculate()
 {
-  names.push_back(Variable("k",1000));
+  st.declare("k", 1000, true);
 	while(true) try {
 		cout << prompt;
 		Token t = ts.get();
