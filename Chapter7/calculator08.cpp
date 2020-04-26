@@ -47,8 +47,9 @@ const char power = 'p';
 const char help = 'h';
 const string squareRoot = "sqrt";
 const string intPower = "pow";
-const string quitString = "exit";
+const string quitString = "quit";
 const string constString = "const";
+const string helpString = "help";
 
 //Get the next token from cin, categorize it, and create the appropriate Token.
 //Return said token.
@@ -100,7 +101,7 @@ Token Token_stream::get()
       if (s == squareRoot) return Token(root);
       if (s == intPower) return Token(power);
 			if (s == constString) return Token(constant);
-			if (s == "h" || s == "H") return Token(help);
+			if (s == helpString) return Token(help);
 			return Token(name,s);
 		}
 		error("Bad token");
@@ -364,7 +365,7 @@ void printHelp(){
 			 << "The value of an expression is printed once a new line is scanned. "
 			 << "Alternatively, you can terminate an expression with ';' to print it.\n"
 			 << "To exit, type " << quitString << ".\n"
-			 << "To see this guide again, simply input the character 'h' or 'H'.\n"
+			 << "To see this guide again, simply input " << helpString << ".\n"
 			 << "Thank you for using our calculator!\n"
 			 << prompt;
 }
@@ -396,7 +397,7 @@ void calculate()
 //Begin the program, handle fatal exceptions.
 int main()
 	try {
-		cout << "For info on how to use this calculator, enter 'h' or 'H'.\n";
+		cout << "For info on how to use this calculator, enter " << helpString << ".\n";
 		calculate();
 		return 0;
 	}
