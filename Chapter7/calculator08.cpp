@@ -55,8 +55,11 @@ Token Token_stream::get()
 {
 	if (full) { full=false; return buffer; }
 	char ch;
-	cin >> ch;
+	ch = cin.get();
+	while(isspace(ch) && ch != '\n') ch = cin.get();
 	switch (ch) {
+	case '\n':
+		return Token(';');
 	case '(':
 	case ')':
 	case '+':
