@@ -37,6 +37,7 @@ public:
 
 //Declare constants
 const char let = 'L';
+const char constant = 'C';
 const char quit = 'Q';
 const char print = ';';
 const char number = '8';
@@ -46,6 +47,7 @@ const char power = 'p';
 const string squareRoot = "sqrt";
 const string intPower = "pow";
 const string quitString = "exit";
+const string constString = "const";
 
 //Get the next token from cin, categorize it, and create the appropriate Token.
 //Return said token.
@@ -93,6 +95,7 @@ Token Token_stream::get()
 			if (s == quitString) return Token(quit);
       if (s == squareRoot) return Token(root);
       if (s == intPower) return Token(power);
+			if (s == constString) return Token(constant);
 			return Token(name,s);
 		}
 		error("Bad token");
@@ -117,7 +120,9 @@ void Token_stream::ignore(char c)
 struct Variable {
 	string name;
 	double value;
-	Variable(string n, double v) :name(n), value(v) { }
+	bool constant;
+	Variable(string n, double v) :name(n), value(v), constant(false) { }
+	Variable(string n, double v, bool b) :name(n), value(v), constant(b) { }
 };
 
 vector<Variable> names;
@@ -135,6 +140,7 @@ void set_value(string s, double d)
 {
 	for (int i = 0; i<=names.size(); ++i)
 		if (names[i].name == s) {
+			if(names[i].constant == true) error("cannot change value of a constant");
 			names[i].value = d;
 			return;
 		}
@@ -280,7 +286,7 @@ double expression()
 
 //Declare a variable. Expects an undeclared name followed by '=' followed by some
 //expression. Returns final value of variable.
-double declaration()
+double declaration(bool makeConst)
 {
 	Token t = ts.get();
 	if (t.kind != 'a') error ("name expected in declaration");
@@ -289,7 +295,8 @@ double declaration()
 	Token t2 = ts.get();
 	if (t2.kind != '=') error("= missing in declaration of " ,name);
 	double d = expression();
-	names.push_back(Variable(name,d));
+	if(makeConst) names.push_back(Variable(name,d,true));
+	else names.push_back(Variable(name,d));
 	return d;
 }
 
@@ -299,7 +306,9 @@ double statement()
 	Token t = ts.get();
 	switch(t.kind) {
 	case let: //If t is let, a declaration follows. Otherwise, expression.
-		return declaration();
+		return declaration(false);
+	case constant:
+		return declaration(true);
 	default:
 		ts.unget(t);
     double d = expression();
