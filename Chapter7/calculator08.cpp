@@ -44,6 +44,7 @@ const char number = '8';
 const char name = 'a';
 const char root = 'r';
 const char power = 'p';
+const char help = 'h';
 const string squareRoot = "sqrt";
 const string intPower = "pow";
 const string quitString = "exit";
@@ -99,6 +100,7 @@ Token Token_stream::get()
       if (s == squareRoot) return Token(root);
       if (s == intPower) return Token(power);
 			if (s == constString) return Token(constant);
+			if (s == "h" || s == "H") return Token(help);
 			return Token(name,s);
 		}
 		error("Bad token");
@@ -344,6 +346,29 @@ void clean_up_mess()
 const string prompt = "> ";
 const string result = "= ";
 
+void printHelp(){
+	cout << "Welcome to our calculator!\n"
+			 << "The functions currently supported are:\n"
+			 << "\t+, -, *, /;\n"
+			 << "\t" << intPower << "(x,n) which raises x to the integer nth power; and\n"
+			 << "\t" << squareRoot << "(x) which takes the square root of x.\n"
+			 << "Additionally, you can declare variables using the following notation:\n"
+			 << "\t# x = 4\n"
+			 << "This declares a variable x and sets it equal to 4.\n"
+			 << "You may only declare a variable once. You can reassign it using\n"
+			 << "\tx = 6\n"
+			 << "which reassigns x to 6. If you wish, you can declare a variable constant using:\n"
+			 << "\t" << constString << " x = 6\n"
+			 << "This prevents x from being reassigned to another value. The constant k = 100 is provided.\n"
+			 << "Once a variable is declared, it can no longer be made constant.\n"
+			 << "The value of an expression is printed once a new line is scanned. "
+			 << "Alternatively, you can terminate an expression with ';' to print it.\n"
+			 << "To exit, type " << quitString << ".\n"
+			 << "To see this guide again, simply input the character 'h' or 'H'.\n"
+			 << "Thank you for using our calculator!\n"
+			 << prompt;
+}
+
 //Accept statements from the user until they type "quit".
 void calculate()
 {
@@ -351,6 +376,12 @@ void calculate()
 	while(true) try {
 		cout << prompt;
 		Token t = ts.get();
+		if(t.kind == help){
+			printHelp();
+		}
+		while (t.kind == help){
+			t = ts.get();
+		}
 		while (t.kind == print) t=ts.get(); //Deal with multiple prints
 		if (t.kind == quit) return;
 		ts.unget(t);
@@ -365,6 +396,7 @@ void calculate()
 //Begin the program, handle fatal exceptions.
 int main()
 	try {
+		cout << "For info on how to use this calculator, enter 'h' or 'H'.\n";
 		calculate();
 		return 0;
 	}
