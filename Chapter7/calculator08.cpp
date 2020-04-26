@@ -2,11 +2,64 @@
 /*
   I do not claim to be the author of this program.
 
-	calculator08buggy.cpp
+	This program implements a basic expression calculator.
+	Input from cin; output to cout.
 
-	Helpful comments removed.
+	The grammar for input is:
+	Statement:
+		Expression
+		Print
+		Statement Print
+		Statement Print Expression
+		Declaration
+		Quit
 
-	We have inserted 3 bugs that the compiler will catch and 3 that it won't.
+	Print:
+		;
+
+	Quit:
+		quit
+
+	Let:
+		#
+
+	Constant:
+		const
+
+	Expression:
+		Term
+		Expression + Term
+		Expression – Term
+
+	Term:
+		Primary
+		Term * Primary
+		Term / Primary
+		Term % Primary
+
+	Primary:
+		Number
+		Assignment
+		( Expression )
+		– Primary
+		+ Primary
+
+	Number:
+		floating-point-literal
+
+	Assignment:
+		Variable = Number
+
+	Declaration:
+		Let Variable = Number
+		Constant Variable = Number
+
+	Variable:
+		variable
+
+	Input comes from cin through the Token_stream called ts.
+	Variables are stored in a Symbol_table called st.
+	Once declared, variables cannot be declared again.
 */
 
 #include "../std_lib_facilities.h"
@@ -61,7 +114,7 @@ Token Token_stream::get()
 	while(isspace(ch) && ch != '\n') ch = cin.get();
 	switch (ch) {
 	case '\n':
-		return Token(';');
+		return Token(print);
 	case '(':
 	case ')':
 	case '+':
@@ -350,7 +403,7 @@ const string result = "= ";
 void printHelp(){
 	cout << "Welcome to our calculator!\n"
 			 << "The functions currently supported are:\n"
-			 << "\t+, -, *, /;\n"
+			 << "\t+, -, *, /, %, ();\n"
 			 << "\t" << intPower << "(x,n) which raises x to the integer nth power; and\n"
 			 << "\t" << squareRoot << "(x) which takes the square root of x.\n"
 			 << "Additionally, you can declare variables using the following notation:\n"
