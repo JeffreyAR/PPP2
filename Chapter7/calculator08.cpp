@@ -163,7 +163,7 @@ Token_stream ts;
 double expression();
 
 //Obtain and return a primary. Deals with subexpressions, numbers, negative
-//numbers, and variable substitution.
+//numbers, variable assignment, and variable substitution.
 double primary()
 {
 	Token t = ts.get();
@@ -182,7 +182,15 @@ double primary()
 	case number: //Number
 		return t.value;
 	case name: //Variable
-		return get_value(t.name);
+		{ Token s = ts.get();
+			if(s.kind == '='){
+				double u = primary();
+				set_value(t.name, u);
+				return u;
+			}
+			ts.unget(s);
+			return get_value(t.name);
+		}
   case root: //Square root function
     { t = ts.get();
       if(t.kind != '('){
