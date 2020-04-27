@@ -60,8 +60,15 @@
 	Input comes from cin through the Token_stream called ts.
 	Variables are stored in a Symbol_table called st.
 	Once declared, variables cannot be declared again.
+
+	Possible improvements:
+		Add trig functions - implemented
+		Add ability to enter functions
+		Add calc functions (derivative or integral, former much easier but still non-trivial)
+		Fix "> =" when multiple statements are executed.
 */
 
+#include <cmath>
 #include "../std_lib_facilities.h"
 
 //Create Token type. Initializer for just a kind, a kind with a value, and a
@@ -98,11 +105,17 @@ const char name = 'a';
 const char root = 'r';
 const char power = 'p';
 const char help = 'h';
+const char sinChar = 's';
+const char cosChar = 'c';
+const char tanChar = 't';
 const string squareRoot = "sqrt";
 const string intPower = "pow";
 const string quitString = "quit";
 const string constString = "const";
 const string helpString = "help";
+const string sinString = "sin";
+const string cosString = "cos";
+const string tanString = "tan";
 
 //Get the next token from cin, categorize it, and create the appropriate Token.
 //Return said token.
@@ -145,17 +158,20 @@ Token Token_stream::get()
   case '#':
     return Token(let);
 	default:
-		if (isalpha(ch)) { //Declaration, quit, square root, or name
+		if (isalpha(ch)) { //Declaration, quit, functions, names
 			string s;
 			s += ch;
 			while(cin.get(ch) && (isalpha(ch) || isdigit(ch) || ch == '_')) s+=ch;
 			cin.unget();
 			if (s == quitString) return Token(quit);
-      if (s == squareRoot) return Token(root);
-      if (s == intPower) return Token(power);
-			if (s == constString) return Token(constant);
-			if (s == helpString) return Token(help);
-			return Token(name,s);
+      else if (s == squareRoot) return Token(root);
+      else if (s == intPower) return Token(power);
+			else if (s == constString) return Token(constant);
+			else if (s == helpString) return Token(help);
+			else if (s == sinString) return Token(sinChar);
+			else if (s == cosString) return Token(cosChar);
+			else if (s == tanString) return Token(tanChar);
+			else return Token(name,s);
 		}
 		error("Bad token");
 	}
@@ -242,6 +258,35 @@ Symbol_table st;
 //Forward declare expression to be used in primary.
 double expression();
 
+//Handles subexpressions. Given a beginning character, a character which separates
+//arguments (separator), and a terminating charactor, it will evaluate each
+//given argument as an expression and return a vector containing each argument.
+vector<double> subexpression(char begin, char separator, char terminate){
+	Token t = ts.get();
+	if(t.kind != begin){ //If actual beginning char doesn't match expected, return an error
+		ts.unget(t);
+		string t(1, begin);
+		string s = "'" + t + " expected";
+		error(s);
+	}
+	vector<double> arguments;
+	arguments.push_back(expression());
+	t = ts.get();
+	while(t.kind != terminate){
+		//Until the subexpression terminates, evaluate arguments as long as they are
+		//separated properly. Otherwise, give an error.
+		if(t.kind != separator){
+			ts.unget(t);
+			string t(1, separator);
+			string s = "'" + t + " expected";
+			error(s);
+		}
+		arguments.push_back(expression());
+		t = ts.get();
+	}
+	return arguments;
+}
+
 //Obtain and return a primary. Deals with subexpressions, numbers, negative
 //numbers, variable assignment, and variable substitution.
 double primary()
@@ -249,13 +294,9 @@ double primary()
 	Token t = ts.get();
 	switch (t.kind) {
 	case '(': //Evaluate subexpression
-	{	double d = expression();
-		t = ts.get();
-		if (t.kind != ')'){
-      ts.unget(t);
-      error("')' expected");
-    }
-    return d;
+	{	ts.unget(t);
+		vector<double> d = subexpression('(', ',', ')');
+    return d[0];
 	}
 	case '-': //Unary -, negates the next primary
 		return - primary();
@@ -272,40 +313,29 @@ double primary()
 			return st.get(t.name);
 		}
   case root: //Square root function
-    { t = ts.get();
-      if(t.kind != '('){
-        ts.unget(t);
-        error("'(' expected after ", squareRoot);
-      }
-      double d = expression();
-      if(d < 0) error("expression inside sqrt is negative");
-      t = ts.get();
-      if (t.kind != ')'){
-        ts.unget(t);
-        error("')' expected");
-      }
-      return sqrt(d);
+    { vector<double> d = subexpression('(', ',', ')');
+			if(d[0] < 0) error("sqrt arguement less than 0");
+			return sqrt(d[0]);
     }
   case power: //Power function
-    { t = ts.get();
-      if(t.kind != '('){
-        ts.unget(t);
-        error("'(' expected after ", intPower);
-      }
-      double d = expression();
-      t = ts.get();
-      if(t.kind != ','){
-        ts.unget(t);
-        error("',' missing in ", intPower);
-      }
-      int i = narrow_cast<int>(expression());
-      t = ts.get();
-      if (t.kind != ')'){
-        ts.unget(t);
-        error("')' expected");
-      }
-    return raisePower(d,i);
+    { vector<double> d = subexpression('(' , ',', ')');
+      int i = narrow_cast<int>(d[1]);
+			if(i < 0) error("negative power");
+    	return raisePower(d[0],i);
     }
+	case sinChar: //Sine function
+		{ vector<double> d = subexpression('(', ',', ')');
+			return sin(d[0]);
+		}
+	case cosChar: //Cosine function
+		{ vector<double> d = subexpression('(', ',', ')');
+			return cos(d[0]);
+		}
+	case tanChar: //Tangent functions
+		{ vector<double> d = subexpression('(', ',', ')');
+			if(cos(d[0]) == 0) error("divide by 0 in tan");
+			return tan(d[0]);
+			}
 	default:
     ts.unget(t);
 		error("primary expected");
@@ -349,7 +379,7 @@ double expression()
 			left -= term();
 			break;
     case name:
-      error("name adjacent to double");
+      error("name adjacent to double"); //numbers should not be adjacent to letters
       break;
 		default:
 			ts.unget(t); //No more addition or multiplication of terms - return.
@@ -386,6 +416,8 @@ double statement()
 		ts.unget(t);
     double d = expression();
     Token t = ts.get();
+		//We should not have returned with parentheses being the next character
+		if(t.kind == '(') error("beginning parenthesis adjacent to number");
     if(t.kind == ')') error("extra ending parenthesis");
 		return d;
 	}
@@ -404,6 +436,7 @@ void printHelp(){
 	cout << "Welcome to our calculator!\n"
 			 << "The functions currently supported are:\n"
 			 << "\t+, -, *, /, %, ();\n"
+			 << "\tsin(t), cos(t), and tan(t);"
 			 << "\t" << intPower << "(x,n) which raises x to the integer nth power; and\n"
 			 << "\t" << squareRoot << "(x) which takes the square root of x.\n"
 			 << "Additionally, you can declare variables using the following notation:\n"
@@ -413,7 +446,8 @@ void printHelp(){
 			 << "\tx = 6\n"
 			 << "which reassigns x to 6. If you wish, you can declare a variable constant using:\n"
 			 << "\t" << constString << " x = 6\n"
-			 << "This prevents x from being reassigned to another value. The constant k = 100 is provided.\n"
+			 << "This prevents x from being reassigned to another value. The constant k = 1000 is provided.\n"
+			 << "More importantly, the constant pi can be accessed using 'pi'.\n"
 			 << "Once a variable is declared, it can no longer be made constant.\n"
 			 << "The value of an expression is printed once a new line is scanned. "
 			 << "Alternatively, you can terminate an expression with ';' to print it.\n"
@@ -427,16 +461,13 @@ void printHelp(){
 void calculate()
 {
   st.declare("k", 1000, true);
+	st.declare("pi", M_PI, true);
 	while(true) try {
 		cout << prompt;
 		Token t = ts.get();
-		if(t.kind == help){
-			printHelp();
-		}
-		while (t.kind == help){
-			t = ts.get();
-		}
-		while (t.kind == print) t=ts.get(); //Deal with multiple prints
+		if(t.kind == help) printHelp();
+		while (t.kind == help) t = ts.get(); //Only display help once per cycle
+		while (t.kind == print) t = ts.get(); //Deal with multiple prints
 		if (t.kind == quit) return;
 		ts.unget(t);
 		cout << result << statement() << endl;
