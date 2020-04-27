@@ -301,7 +301,9 @@ double primary()
 	case '-': //Unary -, negates the next primary
 		return - primary();
 	case number: //Number
-		return t.value;
+		{ int i = narrow_cast<int>(t.value);
+		  return i;
+		}
 	case name: //Variable
 		{ Token s = ts.get();
 			if(s.kind == '='){
